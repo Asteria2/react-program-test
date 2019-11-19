@@ -1,6 +1,6 @@
 import Home from '../components/home/Home';
 import Login from '../components/login/Login';
-import NotMatch from '../components/not-match/404'
+import NotMatch from '../components/404/NotMatch'
 export default [{
     path: '/',
     component: Home,
