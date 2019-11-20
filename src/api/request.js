@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {
   message
-} from 'antd'
+} from 'antd';
+import store from '../redux/store'
 import codeMassage from '../config/codeMassage';
 // axios上有create方法，可以创建axios的实例对象
 const axiosEx = axios.create({
@@ -27,7 +28,11 @@ axiosEx.interceptors.request.use(
         }, "")
         .substring(1);
     }
-    const token = '';
+    const {
+      user: {
+        token
+      }
+    } = store.getState();
     if (token) {
       config.headers.authorization = "Bearer " + token;
     }
