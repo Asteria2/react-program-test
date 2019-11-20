@@ -1,4 +1,7 @@
 import axios from 'axios';
+import {
+  message
+} from 'antd'
 import codeMassage from '../config/codeMassage';
 // axios上有create方法，可以创建axios的实例对象
 const axiosEx = axios.create({
@@ -24,6 +27,7 @@ axiosEx.interceptors.request.use(
         }, "")
         .substring(1);
     }
+    const token = '';
     if (token) {
       config.headers.authorization = "Bearer " + token;
     }
@@ -36,14 +40,17 @@ axiosEx.interceptors.request.use(
 //响应拦截器触发是在响应成功后设置响应回调函数之前
 axiosEx.interceptors.response.use(
   //响应成功
-  (response) => {
-    if (response.data.status === 0) {
+
+  ({
+    data
+  }) => {
+    if (data.status === 0) {
       //功能成功返回数据
-      return response.data.data;
+      return data.data;
     } else {
       //功能响应失败返回错误信息
-      alert(response.data.msg);
-      return Promise.reject(response.data.msg) //参数可以不传
+      message.error(data.msg);
+      return Promise.reject(data.msg) //参数可以不传
     }
   },
   //响应失败
@@ -71,7 +78,7 @@ axiosEx.interceptors.response.use(
         erorMassage = '未知错误';
       }
     }
-    alert(erorMassage);
+    message.error(erorMassage);
     return Promise.reject(erorMassage); //参数可以不传
   }
 );

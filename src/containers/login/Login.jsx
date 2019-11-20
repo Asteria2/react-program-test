@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Form, Button, Icon, Input, message } from "antd";
+import { Form, Button, Icon, Input } from "antd";
 import logo from "./logo.png";
 import "./login.less";
-import axios from "axios";
+import { connect } from "react-redux";
+import { getUserAsync } from "../../redux/action-creators/user";
 const { Item } = Form;
+@connect(null, { getUserAsync })
 @Form.create()
 class Login extends Component {
   validator = (rule, value, callback) => {
@@ -23,27 +25,19 @@ class Login extends Component {
   };
   login = e => {
     e.preventDefault();
-    console.log(111);
     this.props.form.validateFields((err, values) => {
       if (!err) {
         //表单校验成功
-        console.log(333);
+        const { username, password } = values;
 
-        axios
-          .post("http://localhost:5000/api/login", values)
+        this.props
+          .getUserAsync(username, password)
           .then(response => {
             //请求成功
-            if (response.data.status === 0) {
-              this.props.history.push("/");
-            } else {
-              message.error(response.data.msg);
-              this.props.form.resetFields(["password"]);
-            }
+            this.props.history.push("/");
           })
           .catch(err => {
             //请求失败
-            console.log(err);
-            message.error("网络出现故障，请刷新试试");
             this.props.form.resetFields(["password"]);
           });
       }
@@ -119,4 +113,5 @@ class Login extends Component {
     );
   }
 }
+
 export default Login;
