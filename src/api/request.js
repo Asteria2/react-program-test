@@ -2,7 +2,14 @@ import axios from 'axios';
 import {
   message
 } from 'antd';
-import store from '../redux/store'
+import store from '../redux/store';
+import {
+  removeItem
+} from '../utils/storage';
+import {
+  removeUserSuccess
+} from '../redux/action-creators/user';
+import history from '../utils/history';
 import codeMassage from '../config/codeMassage';
 // axios上有create方法，可以创建axios的实例对象
 const axiosEx = axios.create({
@@ -75,6 +82,15 @@ axiosEx.interceptors.response.use(
     let erorMassage = '';
     if (error.response) {
       erorMassage = codeMassage[error.response.status] || '未知错误';
+      if (error.response.status === 401) {
+        //清除token ：redux中的和localstorage中的
+        //redux中用store.dispatch()
+        //localstorage中用removeItem
+        //重定向到/login
+        removeItem('user');
+        store.dispatch(removeUserSuccess());
+        history.push('/login');
+      }
     } else {
       if (error.message.indexOf('Network Error') !== -1) {
         erorMassage = '请检查网络连接';

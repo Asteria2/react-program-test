@@ -8,12 +8,18 @@ import {
   reqLogin
 } from '../../api';
 import {
-  GET_USER_SUCCESS
+  GET_USER_SUCCESS,
+  REMOVE_USER_SUCCESS
 } from '../action-types/user'
 const getUserSuccess = (user) => {
   return {
     type: GET_USER_SUCCESS,
     data: user
+  }
+}
+export const removeUserSuccess=()=>{
+  return {
+    type: REMOVE_USER_SUCCESS
   }
 }
 
