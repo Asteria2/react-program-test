@@ -103,6 +103,7 @@ class Login extends Component {
                   }
                   placeholder="密码"
                   className="login-input"
+                  type="password"
                 />
               )}
             </Item>

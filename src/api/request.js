@@ -33,6 +33,7 @@ axiosEx.interceptors.request.use(
         token
       }
     } = store.getState();
+    console.log(store.getState())
     if (token) {
       config.headers.authorization = "Bearer " + token;
     }
