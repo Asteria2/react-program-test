@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form, Button, Icon, Input } from "antd";
-import logo from "./logo.png";
+import logo from "../../assets/logo.png";
 import "./login.less";
 import { connect } from "react-redux";
 import { setItem } from "../../utils/storage";
