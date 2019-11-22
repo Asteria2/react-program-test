@@ -1,6 +1,9 @@
 import React, { Component } from "react";
-export default class Home extends Component {
+import checkLogin from "../../containers/check-login";
+@checkLogin
+class Home extends Component {
   render() {
     return <div>Home......</div>;
   }
 }
+export default Home;
