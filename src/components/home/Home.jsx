@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import checkLogin from "../../containers/check-login";
-import BasicLayout from "../layout/Layout";
 @checkLogin
 class Home extends Component {
   render() {
-    return (
-      <div>
-        <BasicLayout />
-      </div>
-    );
+    return <div>home.....</div>;
   }
 }
 export default Home;
