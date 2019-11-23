@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import { Menu, Icon } from "antd";
 import logo from "../../../assets/logo.png";
 import "./laft-nav.less";
+import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import navMenus from "../../../config/navMenus";
 
 const { SubMenu } = Menu;
 @withRouter
 class LeftNav extends Component {
+  static propTypes = {
+    isDisplay: PropTypes.bool.isRequired
+  };
   state = {
     menus: []
   };
@@ -67,7 +71,9 @@ class LeftNav extends Component {
       <div>
         <div className="leftNav-logo">
           <img src={logo} alt="logo" />
-          <h3>硅谷后台</h3>
+          <h3 style={{ display: this.props.isDisplay ? "block" : "none" }}>
+            硅谷后台
+          </h3>
         </div>
         <Menu
           theme="dark"

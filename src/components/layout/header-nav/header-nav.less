@@ -1,0 +1,47 @@
+.header-nav {
+  height: 80px;
+
+  .header-nav-up {
+    height: 50px;
+    text-align: right;
+    border-bottom: 1px solid #1DA57A;
+
+    .header-nav-lang {
+      margin: 0 10px;
+    }
+  }
+
+  .header-nav-down {
+    display: flex;
+    height: 30px;
+    background-color: #fff;
+    line-height: 30px;
+
+    h3 {
+      position: relative;
+      flex: 1;
+      text-align: center;
+
+      &::after {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: block;
+        content: '';
+        clear: both;
+        border-top: 20px solid #fff;
+        border-bottom: 20px solid transparent;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+      }
+    }
+
+    span {
+      flex: 2;
+      text-align: right;
+      margin-right: 17px;
+    }
+
+
+  }
+}
