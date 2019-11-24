@@ -10,3 +10,9 @@ export const reqLogin = (username, password) => {
     }
   })
 }
+export const reqGetCategories = () => {
+  return axiosEx({
+    method: 'GET',
+    url: '/category/get'
+  })
+}
