@@ -2,6 +2,7 @@ import Home from '../components/home/Home';
 import Login from '../containers/login/Login';
 import NotMatch from '../components/404/NotMatch';
 import Category from '../containers/category/Category';
+import Product from '../components/product/Product';
 const authRoutes = [{
     path: '/',
     component: Home,
@@ -10,6 +11,11 @@ const authRoutes = [{
   {
     path: '/category',
     component: Category,
+    exact: true
+  },
+  {
+    path: '/product',
+    component: Product,
     exact: true
   },
   {

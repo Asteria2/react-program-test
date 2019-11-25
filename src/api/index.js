@@ -35,10 +35,22 @@ export const reqUpdateCategory = (categoryId, categoryName) => {
     }
   })
 }
-export const reqDelCategory = (categoryId) => axiosEx({
-  method: 'POST',
-  url: '/category/delete',
-  data: {
-    categoryId
-  }
-})
+export const reqDelCategory = (categoryId) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/category/delete',
+    data: {
+      categoryId
+    }
+  })
+}
+export const reqGetProducts = (pageNum, pageSize) => {
+  return axiosEx({
+    method: 'GET',
+    url: '/product/list',
+    params: {
+      pageNum,
+      pageSize
+    }
+  })
+}
