@@ -1,6 +1,6 @@
 import {
   GET_CATEGORY_SUCCESS,
-  ADD_CATEGORY_SUCCESS
+  ADD_CATEGORY_SUCCESS,
 } from '../action-types/category';
 const initState = [];
 export default function categories(prevState = initState, action) {

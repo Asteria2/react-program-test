@@ -19,10 +19,9 @@ class Category extends Component {
   addCategory = () => {
     this.addCategoryForm.props.form.validateFields(async (err, values) => {
       const { categoryName } = values;
-      console.log(categoryName);
       if (!err) {
         await this.props.addCategoryAsync(categoryName);
-        this.hidden();
+        this.hidden("addCategory")();
       }
     });
   };
@@ -31,13 +30,16 @@ class Category extends Component {
       addCategoryVisible: true
     });
   };
-  hidden = () => {
-    this.setState({
-      addCategoryVisible: false
-    });
-    setTimeout(() => {
-      this.addCategoryForm.props.form.resetFields();
-    }, 500);
+
+  hidden = name => {
+    return () => {
+      this.setState({
+        [name + "Visible"]: false
+      });
+      setTimeout(() => {
+        this[name + "Form"].props.form.resetFields();
+      }, 500);
+    };
   };
   componentDidMount() {
     this.props.getCategoriesAsync();
@@ -49,7 +51,7 @@ class Category extends Component {
     },
     {
       title: "操作",
-      render: () => {
+      render: category => {
         return (
           <div>
             <Button type="link">修改分类</Button>
@@ -88,7 +90,7 @@ class Category extends Component {
           title="添加分类"
           visible={addCategoryVisible}
           onOk={this.addCategory}
-          onCancel={this.hidden}
+          onCancel={this.hidden("addCategory")}
           width={300}
         >
           <AddCategoryForm
