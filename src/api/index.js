@@ -16,3 +16,12 @@ export const reqGetCategories = () => {
     url: '/category/get'
   })
 }
+export const reqAddCategory = (categoryName) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/category/add',
+    data: {
+      categoryName
+    }
+  })
+}

@@ -1,10 +1,44 @@
 import React, { Component } from "react";
-import { Table, Card, Button, Icon } from "antd";
+import { Table, Card, Button, Icon, Modal } from "antd";
 import { connect } from "react-redux";
-import { getCategoriesAsync } from "../../redux/action-creators/category";
+import AddCategoryForm from "./addCategory/AddCategoryForm";
+import {
+  getCategoriesAsync,
+  addCategoryAsync
+} from "../../redux/action-creators/category";
 
-@connect(state => ({ categories: state.categories }), { getCategoriesAsync })
+@connect(state => ({ categories: state.categories }), {
+  getCategoriesAsync,
+  addCategoryAsync
+})
 class Category extends Component {
+  state = {
+    addCategoryVisible: false
+  };
+
+  addCategory = () => {
+    this.addCategoryForm.props.form.validateFields(async (err, values) => {
+      const { categoryName } = values;
+      console.log(categoryName);
+      if (!err) {
+        await this.props.addCategoryAsync(categoryName);
+        this.hidden();
+      }
+    });
+  };
+  showAdd = () => {
+    this.setState({
+      addCategoryVisible: true
+    });
+  };
+  hidden = () => {
+    this.setState({
+      addCategoryVisible: false
+    });
+    setTimeout(() => {
+      this.addCategoryForm.props.form.resetFields();
+    }, 500);
+  };
   componentDidMount() {
     this.props.getCategoriesAsync();
   }
@@ -26,12 +60,13 @@ class Category extends Component {
     }
   ];
   render() {
+    const { addCategoryVisible } = this.state;
     return (
       <div>
         <Card
           title="分类列表"
           extra={
-            <Button type="primary">
+            <Button type="primary" onClick={this.showAdd}>
               <Icon type="plus"></Icon>分类列表
             </Button>
           }
@@ -49,6 +84,17 @@ class Category extends Component {
             }}
           />
         </Card>
+        <Modal
+          title="添加分类"
+          visible={addCategoryVisible}
+          onOk={this.addCategory}
+          onCancel={this.hidden}
+          width={300}
+        >
+          <AddCategoryForm
+            wrappedComponentRef={form => (this.addCategoryForm = form)}
+          />
+        </Modal>
       </div>
     );
   }

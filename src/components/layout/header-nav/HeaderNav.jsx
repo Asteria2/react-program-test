@@ -21,8 +21,8 @@ class HeaderNav extends Component {
   state = {
     isFullscreen: false,
     date: dateFormat(Date.now()),
-    title: ""
-    // pathname: ""
+    title: "",
+    pathname: ""
   };
   fullScreen = () => {
     screenfull.toggle();
@@ -78,8 +78,8 @@ class HeaderNav extends Component {
       }
     }
     return {
-      title
-      // pathname
+      title,
+      pathname
     };
   }
   render() {
