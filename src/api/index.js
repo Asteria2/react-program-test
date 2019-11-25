@@ -25,3 +25,20 @@ export const reqAddCategory = (categoryName) => {
     }
   })
 }
+export const reqUpdateCategory = (categoryId, categoryName) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/category/update',
+    data: {
+      categoryId,
+      categoryName
+    }
+  })
+}
+export const reqDelCategory = (categoryId) => axiosEx({
+  method: 'POST',
+  url: '/category/delete',
+  data: {
+    categoryId
+  }
+})

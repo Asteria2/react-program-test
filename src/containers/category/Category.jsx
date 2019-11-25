@@ -2,18 +2,25 @@ import React, { Component } from "react";
 import { Table, Card, Button, Icon, Modal } from "antd";
 import { connect } from "react-redux";
 import AddCategoryForm from "./addCategory/AddCategoryForm";
+import UpdateCategoryForm from "./updateCategory/UpdateCategoryForm";
 import {
   getCategoriesAsync,
-  addCategoryAsync
+  addCategoryAsync,
+  updateCategoryAsync,
+  delCategoryAsync
 } from "../../redux/action-creators/category";
 
 @connect(state => ({ categories: state.categories }), {
   getCategoriesAsync,
-  addCategoryAsync
+  addCategoryAsync,
+  updateCategoryAsync,
+  delCategoryAsync
 })
 class Category extends Component {
   state = {
-    addCategoryVisible: false
+    addCategoryVisible: false,
+    updateCategoryVisible: false,
+    category: {}
   };
 
   addCategory = () => {
@@ -25,12 +32,40 @@ class Category extends Component {
       }
     });
   };
+  updateCategory = () => {
+    this.updateCategoryForm.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        const { categoryName } = values;
+        const categoryId = this.state.category._id;
+        await this.props.updateCategoryAsync(categoryId, categoryName);
+        this.hidden("updateCategory")();
+      }
+    });
+  };
+
+  delCategory = category => {
+    return () => {
+      Modal.confirm({
+        title: `您确定要删除${category.name}分类吗？`,
+        onOk: () => {
+          this.props.delCategoryAsync(category._id);
+        }
+      });
+    };
+  };
   showAdd = () => {
     this.setState({
       addCategoryVisible: true
     });
   };
-
+  showUpdate = category => {
+    return () => {
+      this.setState({
+        updateCategoryVisible: true,
+        category
+      });
+    };
+  };
   hidden = name => {
     return () => {
       this.setState({
@@ -54,15 +89,19 @@ class Category extends Component {
       render: category => {
         return (
           <div>
-            <Button type="link">修改分类</Button>
-            <Button type="link">删除分类</Button>
+            <Button type="link" onClick={this.showUpdate(category)}>
+              修改分类
+            </Button>
+            <Button type="link" onClick={this.delCategory(category)}>
+              删除分类
+            </Button>
           </div>
         );
       }
     }
   ];
   render() {
-    const { addCategoryVisible } = this.state;
+    const { addCategoryVisible, updateCategoryVisible, category } = this.state;
     return (
       <div>
         <Card
@@ -95,6 +134,19 @@ class Category extends Component {
         >
           <AddCategoryForm
             wrappedComponentRef={form => (this.addCategoryForm = form)}
+          />
+        </Modal>
+
+        <Modal
+          title="修改分类"
+          visible={updateCategoryVisible}
+          onOk={this.updateCategory}
+          onCancel={this.hidden("updateCategory")}
+          width={300}
+        >
+          <UpdateCategoryForm
+            categoryName={category.name}
+            wrappedComponentRef={form => (this.updateCategoryForm = form)}
           />
         </Modal>
       </div>

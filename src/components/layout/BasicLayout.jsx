@@ -39,7 +39,7 @@ class BasicLayout extends Component {
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
+            欢迎使用硅谷后台管理系统~~
           </Footer>
         </Layout>
       </Layout>
