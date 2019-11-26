@@ -68,7 +68,9 @@ class HeaderNav extends Component {
     for (let index = 0; index < navMenus.length; index++) {
       const menu = navMenus[index];
       if (menu.children) {
-        const child = menu.children.find(child => child.path === pathname);
+        const child = menu.children.find(child =>
+          pathname.startsWith(child.path)
+        );
         if (child) {
           title = child.title;
           break;

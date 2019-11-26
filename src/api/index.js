@@ -54,3 +54,23 @@ export const reqGetProducts = (pageNum, pageSize) => {
     }
   })
 }
+
+export const reqAddProduct = ({
+  name,
+  desc,
+  categoryId,
+  price,
+  detail
+}) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/product/add',
+    data: {
+      name,
+      desc,
+      categoryId,
+      price,
+      detail
+    }
+  })
+}
