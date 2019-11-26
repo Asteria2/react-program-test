@@ -15,23 +15,29 @@ import "braft-editor/dist/index.css";
 import "./rich-editor.less";
 import { connect } from "react-redux";
 import { getCategoriesAsync } from "../../../redux/action-creators/category";
-import { reqAddProduct } from "../../../api";
+import { reqAddProduct, reqUpdateProduct, reqGetProduct } from "../../../api";
 
 @Form.create()
 @connect(state => ({ categories: state.categories }), { getCategoriesAsync })
-class AddProduct extends Component {
+class ProductForm extends Component {
   state = {
-    // 创建一个空的editorState作为初始值
-    editorState: BraftEditor.createEditorState(null)
+    product: null
   };
   componentDidMount() {
     if (!this.props.categories.length) {
       this.props.getCategoriesAsync();
     }
+    if (!this.props.location.state) {
+      reqGetProduct(this.props.match.params.id).then(res => {
+        this.setState({
+          product: res
+        });
+      });
+    }
   }
-  handleEditorChange = editorState => {
-    this.setState({ editorState });
-  };
+  // handleEditorChange = editorState => {
+  //   this.setState({ editorState });
+  // };
   validator = (_, value, callback) => {
     if (!value || value.isEmpty()) {
       callback("请输入正文内容");
@@ -49,8 +55,23 @@ class AddProduct extends Component {
         console.log(values);
         const { name, desc, categoryId, price, editorState } = values;
         const detail = editorState.toHTML();
-        await reqAddProduct({ name, desc, categoryId, price, detail });
-        message.success("添加商品成功");
+        const { location } = this.props;
+        if (location.pathname.startsWith("/product/update")) {
+          const productId = location.state._id || this.state.product._id;
+          await reqUpdateProduct({
+            name,
+            desc,
+            categoryId,
+            price,
+            detail,
+            productId
+          });
+          message.success("更新商品成功");
+        } else {
+          await reqAddProduct({ name, desc, categoryId, price, detail });
+          message.success("添加商品成功");
+        }
+
         this.props.history.push("/product");
       }
     });
@@ -58,6 +79,12 @@ class AddProduct extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { categories } = this.props;
+    const { state, pathname } = this.props.location;
+    let product = null;
+    if (pathname.startsWith("/product/update")) {
+      product = state || this.state.product;
+    }
+
     return (
       <Card
         title={
@@ -74,17 +101,20 @@ class AddProduct extends Component {
         >
           <Form.Item label="商品名称：">
             {getFieldDecorator("name", {
-              rules: [{ required: true, message: "请输入商品名称" }]
+              rules: [{ required: true, message: "请输入商品名称" }],
+              initialValue: product ? product.name : ""
             })(<Input placeholder="请输入商品名称" />)}
           </Form.Item>
           <Form.Item label="商品描述：">
             {getFieldDecorator("desc", {
-              rules: [{ required: true, message: "请输入商品描述" }]
+              rules: [{ required: true, message: "请输入商品描述" }],
+              initialValue: product ? product.desc : ""
             })(<Input placeholder="请输入商品描述" />)}
           </Form.Item>
           <Form.Item label="商品分类：">
             {getFieldDecorator("categoryId", {
-              rules: [{ required: true, message: "请输入商品分类" }]
+              rules: [{ required: true, message: "请输入商品分类" }],
+              initialValue: product ? product.categoryId : ""
             })(
               <Select placeholder="请输入商品分类">
                 {categories.map(category => {
@@ -99,7 +129,8 @@ class AddProduct extends Component {
           </Form.Item>
           <Form.Item label="商品价格：">
             {getFieldDecorator("price", {
-              rules: [{ required: true, message: "请输入分类名称" }]
+              rules: [{ required: true, message: "请输入分类名称" }],
+              initialValue: product ? product.price : ""
             })(
               <InputNumber
                 style={{ width: 150 }}
@@ -107,7 +138,7 @@ class AddProduct extends Component {
                   // eslint-disable-next-line
                   `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
-                  // eslint-disable-next-line
+                // eslint-disable-next-line
                 parser={value => value.replace(/\￥\s?|(,*)/g, "")}
                 // onChange={onChange}
               />
@@ -121,7 +152,10 @@ class AddProduct extends Component {
                   required: true,
                   validator: this.validator
                 }
-              ]
+              ],
+              initialValue: product
+                ? BraftEditor.createEditorState(product.detail)
+                : ""
             })(
               <BraftEditor
                 className="rich-editor"
@@ -139,4 +173,4 @@ class AddProduct extends Component {
     );
   }
 }
-export default AddProduct;
+export default ProductForm;
