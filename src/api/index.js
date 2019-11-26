@@ -74,3 +74,33 @@ export const reqAddProduct = ({
     }
   })
 }
+export const reqUpdateProduct = ({
+  name,
+  desc,
+  categoryId,
+  price,
+  detail,
+  productId
+}) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/product/update',
+    data: {
+      name,
+      desc,
+      categoryId,
+      price,
+      detail,
+      productId
+    }
+  })
+}
+export const reqGetProduct = (productId) => {
+  return axiosEx({
+    method: 'GET',
+    url: '/product/get',
+    params: {
+      productId
+    }
+  })
+}

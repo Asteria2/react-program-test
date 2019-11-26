@@ -35,12 +35,13 @@ export default class Product extends Component {
     },
     {
       title: "操作",
-      render: yyy => {
-        console.log(yyy);
+      render: product => {
         return (
           <div>
             <Button type="link">详情</Button>
-            <Button type="link">修改</Button>
+            <Button type="link" onClick={this.updateProducts(product)}>
+              修改
+            </Button>
           </div>
         );
       }
@@ -58,6 +59,11 @@ export default class Product extends Component {
   }
   addProducts = () => {
     this.props.history.push("/product/add");
+  };
+  updateProducts = product => {
+    return () => {
+      this.props.history.push("/product/update" + product._id, product);
+    };
   };
   render() {
     const { products, total } = this.state;
