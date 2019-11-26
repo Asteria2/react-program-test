@@ -104,8 +104,10 @@ class AddProduct extends Component {
               <InputNumber
                 style={{ width: 150 }}
                 formatter={value =>
+                  // eslint-disable-next-line
                   `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
+                  // eslint-disable-next-line
                 parser={value => value.replace(/\￥\s?|(,*)/g, "")}
                 // onChange={onChange}
               />
