@@ -140,3 +140,37 @@ export const reqSearchProducts = ({
     }
   })
 }
+//请求获取用户管理组件用户数据
+export const reqGetUsers = () => {
+  return axiosEx({
+    method: 'GET',
+    url: '/user/get'
+  })
+}
+//请求获取角色管理组件角色数据
+export const reqGetRoles = () => {
+  return axiosEx({
+    method: 'GET',
+    url: '/role/get'
+  })
+}
+//请求添加用户管理组件用户
+export const reqAddUser = ({
+  username,
+  password,
+  phone,
+  email,
+  roleId
+}) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/user/add',
+    data: {
+      username,
+      password,
+      phone,
+      email,
+      roleId
+    }
+  })
+}

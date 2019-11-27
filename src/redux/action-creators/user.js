@@ -5,11 +5,11 @@
     异步action creator: 返回值是一个函数，在函数中完成异步操作
  */
 import {
-  reqLogin
+  reqLogin,
 } from '../../api';
 import {
   GET_USER_SUCCESS,
-  REMOVE_USER_SUCCESS
+  REMOVE_USER_SUCCESS,
 } from '../action-types/user'
 const getUserSuccess = (user) => {
   return {
@@ -17,7 +17,7 @@ const getUserSuccess = (user) => {
     data: user
   }
 }
-export const removeUserSuccess=()=>{
+export const removeUserSuccess = () => {
   return {
     type: REMOVE_USER_SUCCESS
   }
