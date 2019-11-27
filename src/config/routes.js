@@ -35,11 +35,11 @@ const authRoutes = [{
     component: ProductDetail,
     exact: true
   },
-  {
+  /* {
     path: '/user',
     component: User,
     exact: true
-  },
+  }, */
   {
     component: NotMatch
   }

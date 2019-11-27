@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import { Card, Select, Button, Icon, Table, Input, message } from "antd";
-import { reqGetProducts, reqUpdateStatus } from "../../api";
+import { reqGetProducts, reqUpdateStatus, reqSearchProducts } from "../../api";
 import "./product.less";
 
 export default class Product extends Component {
   state = {
     products: [],
-    total: 0
+    total: 0,
+    selected: "productName",
+    searchContent: "",
+    current: 1,
+    pageSize: 3
   };
   columns = [
     {
@@ -71,14 +75,30 @@ export default class Product extends Component {
     };
   };
   getProducts = async (pageNum, pageSize) => {
-    const result = await reqGetProducts(pageNum, pageSize);
+    const { selected, searchContent } = this.state;
+    let result = null;
+    if (searchContent) {
+      //搜索商品
+      result = await reqSearchProducts({
+        selected,
+        searchContent,
+        pageNum,
+        pageSize
+      });
+    } else {
+      //全部商品
+      result = await reqGetProducts(pageNum, pageSize);
+    }
     this.setState({
       products: result.list,
-      total: result.total
+      total: result.total,
+      pageSize,
+      current: pageNum
     });
   };
   componentDidMount() {
-    this.getProducts(1, 3);
+    const { current, pageSize } = this.state;
+    this.getProducts(current, pageSize);
   }
   addProducts = () => {
     this.props.history.push("/product/add");
@@ -93,18 +113,38 @@ export default class Product extends Component {
       this.props.history.push("/product/detail", product);
     };
   };
+  selectChange = value => {
+    this.setState({
+      selected: value
+    });
+  };
+  inputChange = e => {
+    this.setState({
+      searchContent: e.target.value.trim()
+    });
+  };
+  search = () => {
+    const { current, pageSize } = this.state;
+    this.getProducts(current, pageSize);
+  };
   render() {
-    const { products, total } = this.state;
+    const { products, total, selected, pageSize, current } = this.state;
     return (
       <Card
         title={
           <div>
-            <Select value={1}>
-              <Select.Option value={1}>根据商品名称</Select.Option>
-              <Select.Option value={2}>根据商品描述</Select.Option>
+            <Select value={selected} onChange={this.selectChange}>
+              <Select.Option value="productName">根据商品名称</Select.Option>
+              <Select.Option value="productDesc">根据商品描述</Select.Option>
             </Select>
-            <Input placeholder="关键字" className="product-search" />
-            <Button type="primary">搜索</Button>
+            <Input
+              placeholder="关键字"
+              onChange={this.inputChange}
+              className="product-search"
+            />
+            <Button type="primary" onClick={this.search}>
+              搜索
+            </Button>
           </div>
         }
         extra={
@@ -123,7 +163,8 @@ export default class Product extends Component {
             showQuickJumper: true,
             showSizeChanger: true,
             pageSizeOptions: ["3", "6", "9"],
-            defaultPageSize: 3,
+            pageSize,
+            current,
             total,
             onChange: this.getProducts, //可以改变页码
             onShowSizeChange: this.getProducts //可以设置一页有几条数据
