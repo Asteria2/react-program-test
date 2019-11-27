@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Card, Select, Button, Icon, Table, Input } from "antd";
-import { reqGetProducts } from "../../api";
+import { Card, Select, Button, Icon, Table, Input, message } from "antd";
+import { reqGetProducts, reqUpdateStatus } from "../../api";
 import "./product.less";
 
 export default class Product extends Component {
@@ -23,12 +23,15 @@ export default class Product extends Component {
     },
     {
       title: "状态",
-      dataIndex: "status",
-      render: () => {
+      // dataIndex: "status",
+      render: product => {
+        const { status } = product;
         return (
           <div>
-            <Button type="primary">上架</Button>
-            已下架
+            <Button type="primary" onClick={this.updateStatus(product)}>
+              {status === 1 ? "上架" : "下架"}
+            </Button>
+            {status === 1 ? "已下架" : "已上架"}
           </div>
         );
       }
@@ -38,7 +41,9 @@ export default class Product extends Component {
       render: product => {
         return (
           <div>
-            <Button type="link">详情</Button>
+            <Button type="link" onClick={this.productDetail(product)}>
+              详情
+            </Button>
             <Button type="link" onClick={this.updateProducts(product)}>
               修改
             </Button>
@@ -47,6 +52,24 @@ export default class Product extends Component {
       }
     }
   ];
+  updateStatus = product => {
+    return () => {
+      const productId = product._id;
+      const status = 3 - product.status;
+      reqUpdateStatus(productId, status).then(res => {
+        message.success("更新商品状态成功");
+        this.setState({
+          products: this.state.products.map(product => {
+            if (product._id === productId) {
+              return { ...product, status };
+            } else {
+              return product;
+            }
+          })
+        });
+      });
+    };
+  };
   getProducts = async (pageNum, pageSize) => {
     const result = await reqGetProducts(pageNum, pageSize);
     this.setState({
@@ -63,6 +86,11 @@ export default class Product extends Component {
   updateProducts = product => {
     return () => {
       this.props.history.push("/product/update" + product._id, product);
+    };
+  };
+  productDetail = product => {
+    return () => {
+      this.props.history.push("/product/detail", product);
     };
   };
   render() {

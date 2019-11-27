@@ -104,3 +104,14 @@ export const reqGetProduct = (productId) => {
     }
   })
 }
+
+export const reqUpdateStatus = (productId, status) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/product/update/status',
+    data: {
+      productId,
+      status
+    }
+  })
+}

@@ -4,6 +4,7 @@ import NotMatch from '../components/404/NotMatch';
 import Category from '../containers/category/Category';
 import Product from '../components/product/Product';
 import ProductForm from '../components/product/productForm/ProductForm';
+import ProductDetail from '../components/product/productDetail/ProductDetail';
 const authRoutes = [{
     path: '/',
     component: Home,
@@ -27,6 +28,16 @@ const authRoutes = [{
   {
     path: '/product/update:id',
     component: ProductForm,
+    exact: true
+  },
+  {
+    path: '/product/detail',
+    component: ProductDetail,
+    exact: true
+  },
+  {
+    path: '/user',
+    component: User,
     exact: true
   },
   {
