@@ -1,14 +1,32 @@
 import {
+  reqAddRole,
   reqGetRoles
 } from '../../api'
-
-
-const getRoleSuccess = () => ({})
-export const getRoleAsync = () => {
+import {
+  GET_ROLES_SUCCESS,
+  ADD_ROLE_SUCCESS
+} from '../action-types/role'
+const getRolesSuccess = (roles) => ({
+  type: GET_ROLES_SUCCESS,
+  data: roles
+})
+export const getRolesAsync = () => {
   return (dispatch) => {
     return reqGetRoles()
       .then((res) => {
-        dispatch(getRoleSuccess(res))
+        dispatch(getRolesSuccess(res))
+      })
+  }
+}
+const addRoleSuccess = (role) => ({
+  type: ADD_ROLE_SUCCESS,
+  data: role
+})
+export const addRoleAsync = (name) => {
+  return (dispatch) => {
+    return reqAddRole(name)
+      .then((res) => {
+        dispatch(addRoleSuccess(res))
       })
   }
 }

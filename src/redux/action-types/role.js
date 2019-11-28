@@ -1,0 +1,2 @@
+export const GET_ROLES_SUCCESS = 'GET_ROLES_SUCCESS';
+export const ADD_ROLE_SUCCESS = 'ADD_ROLE_SUCCESS';

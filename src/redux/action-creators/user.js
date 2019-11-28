@@ -6,6 +6,7 @@
  */
 import {
   reqLogin,
+  reqDelUser
 } from '../../api';
 import {
   GET_USER_SUCCESS,
@@ -30,6 +31,16 @@ export const getUserAsync = (username, password) => {
         const action = getUserSuccess(response)
         dispatch(action);
         return response;
+      })
+
+  }
+}
+export const delUserAsync = (username) => {
+  return (dispatch) => {
+    return reqDelUser(username)
+      .then((response) => {
+        const action = removeUserSuccess(response)
+        dispatch(action);
       })
 
   }

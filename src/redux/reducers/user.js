@@ -12,7 +12,6 @@ export default function user(prevState = initState, action) {
       return {};
     case GET_USER_SUCCESS:
       return action.data;
-
     default:
       return prevState;
   }

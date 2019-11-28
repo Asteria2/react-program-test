@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { Form, Input } from "antd";
-
+import { Form, Input, Select } from "antd";
+import PropTypes from "prop-types";
 @Form.create()
 class AddUserForm extends Component {
+  static propTypes = {
+    roles: PropTypes.array.isRequired
+  };
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -15,7 +18,7 @@ class AddUserForm extends Component {
         <Form.Item label="密码">
           {getFieldDecorator("password", {
             rules: [{ required: true, message: "请输入密码" }]
-          })(<Input placeholder="请输入密码" />)}
+          })(<Input placeholder="请输入密码" type="password" />)}
         </Form.Item>
         <Form.Item label="手机号">
           {getFieldDecorator("phone", {
@@ -28,9 +31,17 @@ class AddUserForm extends Component {
           })(<Input placeholder="请输入邮箱" />)}
         </Form.Item>
         <Form.Item label="角色">
-          {getFieldDecorator("role", {
+          {getFieldDecorator("roleId", {
             rules: [{ required: true, message: "请输入角色" }]
-          })(<Input placeholder="请输入角色" />)}
+          })(
+            <Select>
+              {this.props.roles.map(role => {
+                return (
+                  <Select.Option key={role._id}>{role.name}</Select.Option>
+                );
+              })}
+            </Select>
+          )}
         </Form.Item>
       </Form>
     );

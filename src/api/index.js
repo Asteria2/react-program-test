@@ -154,7 +154,7 @@ export const reqGetRoles = () => {
     url: '/role/get'
   })
 }
-//请求添加用户管理组件用户
+//请求添加用户
 export const reqAddUser = ({
   username,
   password,
@@ -171,6 +171,25 @@ export const reqAddUser = ({
       phone,
       email,
       roleId
+    }
+  })
+}
+//请求添加角色
+export const reqAddRole = (name) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/role/add',
+    data: {
+      name
+    }
+  })
+}
+export const reqDelUser = (username) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/user/delete',
+    data: {
+      username
     }
   })
 }

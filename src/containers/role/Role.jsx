@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 import { Card, Button, Table, Radio, Modal } from "antd";
 import "./role.less";
-import { reqGetRoles } from "../../api";
 import dateFormat from "../../utils/dateFormat";
 import AddRoleForm from "./addRoleForm/AddRoleForm";
-
+import { getRolesAsync } from "../../redux/action-creators/role";
 import { connect } from "react-redux";
-@connect()
+@connect(state => ({ roles: state.roles }), { getRolesAsync })
 class Role extends Component {
   state = {
     value: "",
-    roles: [],
     addRoleVisible: false
   };
   columns = [
@@ -58,15 +56,14 @@ class Role extends Component {
   };
 
   componentDidMount() {
-    reqGetRoles().then(res => {
-      this.setState({
-        roles: res
-      });
-    });
+    if (!this.props.roles.length) {
+      this.props.getRolesAsync();
+    }
   }
 
   render() {
-    const { roles, value, addRoleVisible } = this.state;
+    const { value, addRoleVisible } = this.state;
+    const { roles } = this.props;
     return (
       <Card
         title={
@@ -74,7 +71,7 @@ class Role extends Component {
             <Button type="primary" onClick={this.showAddRole}>
               创建角色
             </Button>
-            <Button type="primary" className="controlBtn" disabled="false">
+            <Button type="primary" className="controlBtn">
               设置角色权限
             </Button>
           </div>
