@@ -40,7 +40,7 @@ export const delRoleAsync = (roleId) => {
   return (dispatch) => {
     return reqDelRole(roleId)
       .then((res) => {
-        dispatch(delRoleSuccess(res))
+        dispatch(delRoleSuccess(roleId))
       })
   }
 }

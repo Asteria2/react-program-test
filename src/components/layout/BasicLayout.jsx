@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import LeftNav from "./left-nav/LeftNav";
 import checkLogin from "../../containers/check-login";
 import HeaderNav from "./header-nav/HeaderNav";
-
+import ThemeColor from "./theme-color/ThemeColor";
 const { Sider } = Layout;
 
 const { Header, Content, Footer } = Layout;
@@ -42,6 +42,7 @@ class BasicLayout extends Component {
             欢迎使用硅谷后台管理系统~~
           </Footer>
         </Layout>
+        <ThemeColor />
       </Layout>
     );
   }
