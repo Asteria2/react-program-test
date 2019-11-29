@@ -7,6 +7,11 @@ import ProductForm from '../components/product/productForm/ProductForm';
 import ProductDetail from '../components/product/productDetail/ProductDetail';
 import User from '../containers/user/User';
 import Role from '../containers/role/Role';
+import Bar from '../components/charts/Bar';
+import Line from '../components/charts/Line';
+import Pie from '../components/charts/Pie';
+
+
 const authRoutes = [{
     path: '/',
     component: Home,
@@ -45,6 +50,21 @@ const authRoutes = [{
   {
     path: '/role',
     component: Role,
+    exact: true
+  },
+  {
+    path: '/charts/bar',
+    component: Bar,
+    exact: true
+  },
+  {
+    path: '/charts/line',
+    component: Line,
+    exact: true
+  },
+  {
+    path: '/charts/pie',
+    component: Pie,
     exact: true
   },
   {
