@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Card, Button, Table, Modal, message } from "antd";
-import { reqGetUsers, reqAddUser } from "../../api";
+import { reqGetUsers, reqAddUser, reqDelUser } from "../../api";
 import dateFormat from "../../utils/dateFormat";
 import AddUserForm from "./addUserForm/AddUserForm";
 import { connect } from "react-redux";
 import { getRolesAsync } from "../../redux/action-creators/role";
-import { reqDelUser } from "../../api";
 
 @connect(state => ({ roles: state.roles }), { getRolesAsync })
 class User extends Component {
@@ -65,6 +64,11 @@ class User extends Component {
         title: `您确定要删除用户${user.username}吗？`,
         onOk: () => {
           reqDelUser(user.username);
+          reqGetUsers().then(res => {
+            this.setState({
+              users: res
+            });
+          });
         }
       });
     };
@@ -87,17 +91,32 @@ class User extends Component {
   addUser = () => {
     this.addUserForm.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log(values);
-        const result = await reqAddUser(values);
-        console.log(result);
-        message.success("添加用户成功");
-        this.addUserForm.props.form.resetFields();
-        this.setState({
-          users: [...this.state.users, result]
-        });
-        this.setState({
-          addUserVisible: false
-        });
+        let result = null;
+        try {
+          let { username, password, phone, email, roleId } = values;
+          if (!phone || !email) {
+            phone = "";
+            email = "";
+          }
+          result = await reqAddUser({
+            username,
+            password,
+            phone,
+            email,
+            roleId
+          });
+          console.log(result);
+          message.success("添加用户成功");
+          this.addUserForm.props.form.resetFields();
+          this.setState({
+            users: [...this.state.users, result]
+          });
+          this.setState({
+            addUserVisible: false
+          });
+        } catch {
+          this.addUserForm.props.form.resetFields(["username"]);
+        }
       }
     });
   };
@@ -134,7 +153,7 @@ class User extends Component {
           visible={addUserVisible}
           onOk={this.addUser}
           onCancel={this.hidden}
-          width={300}
+          width={500}
         >
           <AddUserForm
             wrappedComponentRef={form => (this.addUserForm = form)}

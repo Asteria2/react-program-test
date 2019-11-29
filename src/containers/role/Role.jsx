@@ -1,15 +1,27 @@
 import React, { Component } from "react";
-import { Card, Button, Table, Radio, Modal } from "antd";
+import { Card, Button, Table, Radio, Modal, message } from "antd";
 import "./role.less";
 import dateFormat from "../../utils/dateFormat";
 import AddRoleForm from "./addRoleForm/AddRoleForm";
-import { getRolesAsync } from "../../redux/action-creators/role";
+import {
+  getRolesAsync,
+  addRoleAsync,
+  delRoleAsync
+} from "../../redux/action-creators/role";
 import { connect } from "react-redux";
-@connect(state => ({ roles: state.roles }), { getRolesAsync })
+import SetControlForm from "./setControl/SetControlForm";
+
+@connect(state => ({ roles: state.roles }), {
+  getRolesAsync,
+  addRoleAsync,
+  delRoleAsync
+})
 class Role extends Component {
   state = {
     value: "",
-    addRoleVisible: false
+    addRoleVisible: false,
+    setControlVisible: false,
+    isDisabled: true
   };
   columns = [
     {
@@ -31,7 +43,7 @@ class Role extends Component {
       title: "授权时间",
       dataIndex: "authTime",
       render: time => {
-        return dateFormat(time);
+        return time && dateFormat(time);
       }
     },
     {
@@ -39,22 +51,66 @@ class Role extends Component {
       dataIndex: "authName"
     }
   ];
+  onRadioChange = e => {
+    console.log(e.target.value);
+    this.setState({
+      isDisabled: false,
+      value: e.target.value
+    });
+  };
   showAddRole = () => {
     this.setState({
       addRoleVisible: true
     });
   };
-  addRole = () => {
+  showDelRole = () => {
     this.setState({
-      addRoleVisible: false
+      delRoleVisible: true
     });
   };
-  hidden = () => {
+  showSetControl = () => {
     this.setState({
-      addRoleVisible: false
+      setControlVisible: true
     });
+  };
+  addRole = () => {
+    this.addRoleForm.props.form.validateFields((err, values) => {
+      if (!err) {
+        const { roleName } = values;
+        this.props.addRoleAsync(roleName);
+        message.success("添加角色成功");
+        this.addRoleForm.props.form.resetFields();
+      }
+      this.setState({
+        addRoleVisible: false
+      });
+    });
+  };
+  delRole = () => {
+    const { value } = this.state;
+    const role = this.props.roles.find(role => role._id === value);
+    console.log(role);
+    Modal.confirm({
+      title: `您确定要删除${role.name}角色吗？`,
+      onOk: () => {
+        this.props.delRoleAsync(role._id);
+        this.props.getRolesAsync();
+      }
+    });
+  };
+  hidden = name => {
+    return () => {
+      this.setState({
+        [name + "Visible"]: false
+      });
+    };
   };
 
+  setControl = () => {
+    this.setState({
+      setControlVisible: false
+    });
+  };
   componentDidMount() {
     if (!this.props.roles.length) {
       this.props.getRolesAsync();
@@ -62,8 +118,9 @@ class Role extends Component {
   }
 
   render() {
-    const { value, addRoleVisible } = this.state;
+    const { value, addRoleVisible, setControlVisible, isDisabled } = this.state;
     const { roles } = this.props;
+    const role = roles.find(role => role._id === value);
     return (
       <Card
         title={
@@ -71,14 +128,27 @@ class Role extends Component {
             <Button type="primary" onClick={this.showAddRole}>
               创建角色
             </Button>
-            <Button type="primary" className="controlBtn">
+
+            <Button
+              type="primary"
+              className="controlBtn"
+              onClick={this.delRole}
+              disabled={isDisabled}
+            >
+              删除角色
+            </Button>
+            <Button
+              type="primary"
+              onClick={this.showSetControl}
+              disabled={isDisabled}
+            >
               设置角色权限
             </Button>
           </div>
         }
       >
         <Radio.Group
-          onChange={this.onChange}
+          onChange={this.onRadioChange}
           value={value}
           style={{ width: "100%" }}
         >
@@ -99,11 +169,23 @@ class Role extends Component {
           title="创建角色"
           visible={addRoleVisible}
           onOk={this.addRole}
-          onCancel={this.hidden}
+          onCancel={this.hidden("addRole")}
           width={300}
         >
           <AddRoleForm
             wrappedComponentRef={form => (this.addRoleForm = form)}
+          />
+        </Modal>
+        <Modal
+          title="设置角色权限"
+          visible={setControlVisible}
+          onOk={this.setControl}
+          onCancel={this.hidden("setControl")}
+          width={600}
+        >
+          <SetControlForm
+            wrappedComponentRef={form => (this.setControlForm = form)}
+            role={role}
           />
         </Modal>
       </Card>

@@ -1,10 +1,12 @@
 import {
   reqAddRole,
-  reqGetRoles
+  reqGetRoles,
+  reqDelRole
 } from '../../api'
 import {
   GET_ROLES_SUCCESS,
-  ADD_ROLE_SUCCESS
+  ADD_ROLE_SUCCESS,
+  DEL_ROLE_SUCCESS
 } from '../action-types/role'
 const getRolesSuccess = (roles) => ({
   type: GET_ROLES_SUCCESS,
@@ -27,6 +29,18 @@ export const addRoleAsync = (name) => {
     return reqAddRole(name)
       .then((res) => {
         dispatch(addRoleSuccess(res))
+      })
+  }
+}
+const delRoleSuccess = (role) => ({
+  type: DEL_ROLE_SUCCESS,
+  data: role
+})
+export const delRoleAsync = (roleId) => {
+  return (dispatch) => {
+    return reqDelRole(roleId)
+      .then((res) => {
+        dispatch(delRoleSuccess(res))
       })
   }
 }

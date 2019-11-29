@@ -184,6 +184,18 @@ export const reqAddRole = (name) => {
     }
   })
 }
+//请求删除角色
+export const reqDelRole = (roleId) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/role/delete',
+    data: {
+      roleId
+    }
+  })
+}
+
+//请求删除用户
 export const reqDelUser = (username) => {
   return axiosEx({
     method: 'POST',

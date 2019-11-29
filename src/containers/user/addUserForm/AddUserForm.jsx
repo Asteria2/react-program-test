@@ -22,12 +22,12 @@ class AddUserForm extends Component {
         </Form.Item>
         <Form.Item label="手机号">
           {getFieldDecorator("phone", {
-            rules: [{ required: true, message: "请输入手机号" }]
+            // rules: [{ required: true, message: "请输入手机号" }]
           })(<Input placeholder="请输入手机号" />)}
         </Form.Item>
         <Form.Item label="邮箱">
           {getFieldDecorator("email", {
-            rules: [{ required: true, message: "请输入邮箱" }]
+            // rules: [{ required: true, message: "请输入邮箱" }]
           })(<Input placeholder="请输入邮箱" />)}
         </Form.Item>
         <Form.Item label="角色">
