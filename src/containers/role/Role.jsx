@@ -94,7 +94,6 @@ class Role extends Component {
       title: `您确定要删除${role.name}角色吗？`,
       onOk: () => {
         this.props.delRoleAsync(role._id);
-        
       }
     });
   };

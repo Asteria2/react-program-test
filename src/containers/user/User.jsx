@@ -3,6 +3,7 @@ import { Card, Button, Table, Modal, message } from "antd";
 import { reqGetUsers, reqAddUser, reqDelUser } from "../../api";
 import dateFormat from "../../utils/dateFormat";
 import AddUserForm from "./addUserForm/AddUserForm";
+import UpdatePasswordForm from "./updatePasswordForm/UpdatePasswordForm";
 import { connect } from "react-redux";
 import { getRolesAsync } from "../../redux/action-creators/role";
 
@@ -10,7 +11,8 @@ import { getRolesAsync } from "../../redux/action-creators/role";
 class User extends Component {
   state = {
     users: [],
-    addUserVisible: false
+    addUserVisible: false,
+    updatePasswordVisible: false
   };
   columns = [
     {
@@ -48,7 +50,9 @@ class User extends Component {
       render: user => {
         return (
           <div>
-            <Button type="link">修改密码</Button>
+            <Button type="link" onClick={this.updateUserPassword(user)}>
+              修改密码
+            </Button>
             <Button type="link" onClick={this.delUser(user)}>
               删除
             </Button>
@@ -57,6 +61,7 @@ class User extends Component {
       }
     }
   ];
+
   delUser = user => {
     return () => {
       console.log(user);
@@ -70,6 +75,13 @@ class User extends Component {
             });
           });
         }
+      });
+    };
+  };
+  updateUserPassword = user => {
+    return () => {
+      this.setState({
+        updatePasswordVisible: true
       });
     };
   };
@@ -120,13 +132,20 @@ class User extends Component {
       }
     });
   };
-  hidden = () => {
+  hidden = name => {
+    return () => {
+      this.setState({
+        [name + "Visible"]: false
+      });
+    };
+  };
+  updatePassword = () => {
     this.setState({
-      addUserVisible: false
+      updatePasswordVisible: false
     });
   };
   render() {
-    const { users, addUserVisible } = this.state;
+    const { users, addUserVisible, updatePasswordVisible } = this.state;
     const { roles } = this.props;
     return (
       <Card
@@ -152,11 +171,23 @@ class User extends Component {
           title="创建用户"
           visible={addUserVisible}
           onOk={this.addUser}
-          onCancel={this.hidden}
+          onCancel={this.hidden("addUser")}
           width={500}
         >
           <AddUserForm
             wrappedComponentRef={form => (this.addUserForm = form)}
+            roles={roles}
+          />
+        </Modal>
+        <Modal
+          title="修改密码"
+          visible={updatePasswordVisible}
+          onOk={this.updatePassword}
+          onCancel={this.hidden("updatePassword")}
+          width={500}
+        >
+          <UpdatePasswordForm
+            wrappedComponentRef={form => (this.updatePasswordForm = form)}
             roles={roles}
           />
         </Modal>
