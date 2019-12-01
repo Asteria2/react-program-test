@@ -52,7 +52,7 @@ class SetControlForm extends Component {
     });
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { name } = this.props.role;
+    const { name, menus } = this.props.role;
     return (
       <Form>
         <Form.Item label="角色名称：">
@@ -60,9 +60,15 @@ class SetControlForm extends Component {
             initialValue: name
           })(<Input placeholder="请输入角色名称" disabled />)}
         </Form.Item>
-        <Tree checkable defaultExpandAll={true}>
-          {this.renderTreeNodes(this.treeData)}
-        </Tree>
+        {getFieldDecorator("menus", {
+          trigger: "onCheck", //收集子节点的时机
+          valuePropName: "checkedKeys", //从子节点值的属性收集数据
+          initialValue: menus
+        })(
+          <Tree checkable defaultExpandAll={true}>
+            {this.renderTreeNodes(this.treeData)}
+          </Tree>
+        )}
       </Form>
     );
   }

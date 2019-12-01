@@ -30,7 +30,11 @@ axiosEx.interceptors.request.use(
     */
       config.data = Object.keys(config.data)
         .reduce((previous, current) => {
-          const value = config.data[current];
+          let value = config.data[current];
+          const type = Object.prototype.toString.call(value).slice(8, -1);
+          if (type === 'Object' || type === 'Array') {
+            value = JSON.stringify(value);
+          }
           return previous + `&${current}=${value}`;
         }, "")
         .substring(1);

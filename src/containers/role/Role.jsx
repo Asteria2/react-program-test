@@ -6,16 +6,21 @@ import AddRoleForm from "./addRoleForm/AddRoleForm";
 import {
   getRolesAsync,
   addRoleAsync,
-  delRoleAsync
+  delRoleAsync,
+  updateRoleAsync
 } from "../../redux/action-creators/role";
 import { connect } from "react-redux";
 import SetControlForm from "./setControl/SetControlForm";
 
-@connect(state => ({ roles: state.roles }), {
-  getRolesAsync,
-  addRoleAsync,
-  delRoleAsync
-})
+@connect(
+  state => ({ roles: state.roles, username: state.user.user.username }),
+  {
+    getRolesAsync,
+    addRoleAsync,
+    delRoleAsync,
+    updateRoleAsync
+  }
+)
 class Role extends Component {
   state = {
     value: "",
@@ -106,8 +111,23 @@ class Role extends Component {
   };
 
   setControl = () => {
-    this.setState({
-      setControlVisible: false
+    this.setControlForm.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        console.log(values);
+        const { menus } = values;
+        const roleId = this.state.value;
+        const authName = this.props.username;
+        await this.props.updateRoleAsync({
+          roleId,
+          authName,
+          menus
+        });
+        message.success("修改权限成功");
+        this.setControlForm.props.form.resetFields();
+        this.setState({
+          setControlVisible: false
+        });
+      }
     });
   };
   componentDidMount() {

@@ -205,3 +205,20 @@ export const reqDelUser = (username) => {
     }
   })
 }
+
+//请求更新角色权限
+export const reqUpdateRole = ({
+  roleId,
+  authName,
+  menus
+}) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/role/update',
+    data: {
+      roleId,
+      authName,
+      menus
+    }
+  })
+}
