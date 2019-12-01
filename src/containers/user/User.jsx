@@ -6,12 +6,16 @@ import AddUserForm from "./addUserForm/AddUserForm";
 import UpdatePasswordForm from "./updatePasswordForm/UpdatePasswordForm";
 import { connect } from "react-redux";
 import { getRolesAsync } from "../../redux/action-creators/role";
+import { updatePasswordAsync } from "../../redux/action-creators/user";
 
-@connect(state => ({ roles: state.roles }), { getRolesAsync })
+@connect(state => ({ roles: state.roles }), {
+  getRolesAsync,
+  updatePasswordAsync
+})
 class User extends Component {
   state = {
     users: [],
-    data: null,
+    data: {},
     addUserVisible: false,
     updatePasswordVisible: false
   };
@@ -142,12 +146,23 @@ class User extends Component {
     };
   };
   updatePassword = () => {
-    this.setState({
-      updatePasswordVisible: false
+    this.updatePasswordForm.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        const { password } = values;
+        const { username } = this.state.data;
+        const result = await this.props.updatePasswordAsync(username, password);
+        console.log(result);
+        message.success("修改密码成功");
+        this.updatePasswordForm.props.form.resetFields();
+        this.setState({
+          updatePasswordVisible: false
+        });
+      }
+      this.updatePasswordForm.props.form.resetFields();
     });
   };
   render() {
-    const { users, addUserVisible, updatePasswordVisible, data } = this.state;
+    const { users, addUserVisible, updatePasswordVisible } = this.state;
     const { roles } = this.props;
     return (
       <Card
@@ -190,7 +205,6 @@ class User extends Component {
         >
           <UpdatePasswordForm
             wrappedComponentRef={form => (this.updatePasswordForm = form)}
-            dtat={data}
           />
         </Modal>
       </Card>

@@ -6,11 +6,13 @@
  */
 import {
   reqLogin,
-  reqDelUser
+  reqDelUser,
+  reqUpdatePassword
 } from '../../api';
 import {
   GET_USER_SUCCESS,
   REMOVE_USER_SUCCESS,
+  UPDATE_USER_SUCCESS
 } from '../action-types/user'
 const getUserSuccess = (user) => {
   return {
@@ -41,6 +43,24 @@ export const delUserAsync = (username) => {
       .then((response) => {
         const action = removeUserSuccess(response)
         dispatch(action);
+      })
+
+  }
+}
+
+const updateUserSuccess = (user) => {
+  return {
+    type: UPDATE_USER_SUCCESS,
+    data: user
+  }
+}
+
+export const updatePasswordAsync = (username, password) => {
+  return (dispatch) => {
+    return reqUpdatePassword(username, password)
+      .then((response) => {
+        dispatch(updateUserSuccess(response));
+        return response;
       })
 
   }

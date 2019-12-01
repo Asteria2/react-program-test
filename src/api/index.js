@@ -205,6 +205,17 @@ export const reqDelUser = (username) => {
     }
   })
 }
+//请求修改用户密码
+export const reqUpdatePassword = (username, password) => {
+  return axiosEx({
+    method: 'POST',
+    url: '/user/update',
+    data: {
+      username,
+      password
+    }
+  })
+}
 
 //请求更新角色权限
 export const reqUpdateRole = ({

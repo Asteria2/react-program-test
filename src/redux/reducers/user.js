@@ -1,6 +1,7 @@
 import {
   GET_USER_SUCCESS,
   REMOVE_USER_SUCCESS,
+  UPDATE_USER_SUCCESS
 } from '../action-types/user';
 import {
   getItem
@@ -12,6 +13,13 @@ export default function user(prevState = initState, action) {
       return {};
     case GET_USER_SUCCESS:
       return action.data;
+    case UPDATE_USER_SUCCESS:
+      return prevState.map((user) => {
+        if (user.username === action.data.username) {
+          return action.data;
+        }
+        return user;
+      });
     default:
       return prevState;
   }
