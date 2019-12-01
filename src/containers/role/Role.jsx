@@ -115,6 +115,7 @@ class Role extends Component {
       if (!err) {
         console.log(values);
         const { menus } = values;
+        console.log(menus);
         const roleId = this.state.value;
         const authName = this.props.username;
         await this.props.updateRoleAsync({

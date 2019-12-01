@@ -53,6 +53,10 @@ const authRoutes = [{
     exact: true
   },
   {
+    path: '/charts',
+    exact: true
+  },
+  {
     path: '/charts/bar',
     component: Bar,
     exact: true

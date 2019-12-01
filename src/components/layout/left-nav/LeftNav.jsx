@@ -5,8 +5,13 @@ import "./laft-nav.less";
 import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import navMenus from "../../../config/navMenus";
+import { connect } from "react-redux";
 
 const { SubMenu } = Menu;
+
+@connect(state => ({
+  rootMenus: state.user.user.menus
+}))
 @withRouter
 class LeftNav extends Component {
   static propTypes = {
@@ -66,8 +71,23 @@ class LeftNav extends Component {
   }
   render() {
     let { pathname } = this.props.location;
+    const { rootMenus } = this.props;
+    const filterMenu = navMenus.reduce((p, menu) => {
+      if (rootMenus.indexOf(menu.path) !== -1) {
+        return [...p, menu];
+      }
+      if (menu.children) {
+        const newMenu = { ...menu };
+        newMenu.children = newMenu.children.filter(
+          child => rootMenus.indexOf(child.path) !== -1
+        );
+        return [...p, newMenu];
+      }
+      return p;
+    }, []);
     pathname = pathname.startsWith("/product") ? "/product" : pathname;
-    const openKey = this.findOpenKey(navMenus, pathname);
+    const openKey = this.findOpenKey(filterMenu, pathname);
+    const menuList = this.createMenu(filterMenu);
     return (
       <div>
         <div className="leftNav-logo">
@@ -82,7 +102,7 @@ class LeftNav extends Component {
           defaultOpenKeys={[openKey]}
           mode="inline"
         >
-          {this.state.menus}
+          {menuList}
         </Menu>
       </div>
     );
