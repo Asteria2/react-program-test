@@ -11,6 +11,7 @@ import { getRolesAsync } from "../../redux/action-creators/role";
 class User extends Component {
   state = {
     users: [],
+    data: null,
     addUserVisible: false,
     updatePasswordVisible: false
   };
@@ -47,13 +48,13 @@ class User extends Component {
     },
     {
       title: "操作",
-      render: user => {
+      render: data => {
         return (
           <div>
-            <Button type="link" onClick={this.updateUserPassword(user)}>
+            <Button type="link" onClick={this.updateUserPassword(data)}>
               修改密码
             </Button>
-            <Button type="link" onClick={this.delUser(user)}>
+            <Button type="link" onClick={this.delUser(data)}>
               删除
             </Button>
           </div>
@@ -62,13 +63,13 @@ class User extends Component {
     }
   ];
 
-  delUser = user => {
+  delUser = data => {
     return () => {
-      console.log(user);
+      console.log(data);
       Modal.confirm({
-        title: `您确定要删除用户${user.username}吗？`,
+        title: `您确定要删除用户${data.username}吗？`,
         onOk: () => {
-          reqDelUser(user.username);
+          reqDelUser(data.username);
           reqGetUsers().then(res => {
             this.setState({
               users: res
@@ -78,9 +79,10 @@ class User extends Component {
       });
     };
   };
-  updateUserPassword = user => {
+  updateUserPassword = data => {
     return () => {
       this.setState({
+        data: data,
         updatePasswordVisible: true
       });
     };
@@ -145,7 +147,7 @@ class User extends Component {
     });
   };
   render() {
-    const { users, addUserVisible, updatePasswordVisible } = this.state;
+    const { users, addUserVisible, updatePasswordVisible, data } = this.state;
     const { roles } = this.props;
     return (
       <Card
@@ -188,7 +190,7 @@ class User extends Component {
         >
           <UpdatePasswordForm
             wrappedComponentRef={form => (this.updatePasswordForm = form)}
-            roles={roles}
+            dtat={data}
           />
         </Modal>
       </Card>
